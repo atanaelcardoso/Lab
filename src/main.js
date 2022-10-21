@@ -1,20 +1,21 @@
 import IMask from "imask"
+
 import "./css/index.css"
 
-const ccBgColor01 = document.querySelector(".cc-bg > g g:ntn-child(1) path")
-const ccBgColor02 = document.querySelector(".cc-bg > g g:ntn-child(2) path")
-const ccLogo = document.querySelector(".cc-Logo > span:ntn-child(1) img")
+const ccBgColor01 = document.querySelector(".cc-bg > svg > g g:nth-child(1) path")
+const ccBgColor02 = document.querySelector(".cc-bg > svg > g g:nth-child(2) path")
+const ccLogo = document.querySelector(".cc-logo > span:nth-child(1) img")
 
 function setCardType(type) {
   const colors = {
     visa: ["#436D99", "#2D57F2"],
-    mastercad: ["#DF6F29", "#C69347"],
+    mastercard: ["#DF6F29", "#C69347"],
     default: ["black", "gray"],
   }
 
   ccBgColor01.setAttribute("fill", colors[type] [0])
   ccBgColor02.setAttribute("fill", colors[type] [1])
-  ccLogo.setAttribute("src", 'cc-${type}.svg')
+  ccLogo.setAttribute("src", `cc-${type}.svg`)
 }
 
 setCardType("mastercard")
@@ -34,8 +35,8 @@ const expirationDatePattern = {
   blocks: {
     YY: {
       mask: IMask.MaskedRange,
-      from: String(new Data().getFullYear()).slice(2),
-      to: String(new Data().getFullYear() + 10).slice(2),
+      from: String(new Date().getFullYear()).slice(2),
+      to: String(new Date().getFullYear() + 10).slice(2),
     },
     MM: {
       mask: IMask.MaskedRange,
@@ -49,28 +50,27 @@ const expirationDatePattern = {
 const cardNumber = document.querySelector("#card-number")
 const cardNumberPattern = {
   mask: [
-  {
-    mask: "0000 0000 0000 0000",
-    regex: /^4\d{0,15}/,
-    cardtype: "visa",
-  },
     {
-    mask: "0000 0000 0000 0000",
-    regex: /(^5[1-5]\d{0,2}|^22[2-9]\d|^2[3-7]\d{0,2})\d{0,12}/,
-    cardtype: "mastercard",
-  },
-    {
-    mask: "0000 0000 0000 0000",
-    cardtype: "default",
-  },
+      mask: "0000 0000 0000 0000",
+      regex: /^4\d{0,15}/,
+      cardtype: "visa",
+    },
+      {
+      mask: "0000 0000 0000 0000",
+      regex: /(^5[1-5]\d{0,2}|^22[2-9]\d|^2[3-7]\d{0,2})\d{0,12}/,
+      cardtype: "mastercard",
+    },
+      {
+      mask: "0000 0000 0000 0000",
+      cardtype: "default",
+    },
   ],
   dispatch: function(appended, dynamicMasked) {
     const number = (dynamicMasked.value + appended).replace(/\D/g, "")
-    const foundMask = dynamicMasked.compiledMaskes.find(function (item) {
+    const foundMask = dynamicMasked.compiledMasks.find(function (item) {
       return number.match(item.regex)
     })
 
-    //console.log(foundMask)
     return foundMask
   },
 }
